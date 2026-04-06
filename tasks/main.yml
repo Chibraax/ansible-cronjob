@@ -1,0 +1,28 @@
+---
+- name: Create a directory if it does not exist
+  ansible.builtin.file:
+    path: /home/{{ ansible_user }}/cronjobs
+    state: directory
+    mode: '0755'
+
+- name: Create file for cron jobs auto update
+  ansible.builtin.file:
+    path: /home/{{ ansible_user }}/cronjobs/auto_update.sh
+    state: touch
+    mode: '0755'
+
+- name: write bash command for auto update
+  ansible.builtin.shell: |
+    echo "sudo apt update && sudo apt upgrade -y" > /home/{{ ansible_user }}/cronjobs/update.sh
+  args:
+    creates: /home/{{ ansible_user }}/cronjobs/update.sh
+
+- name: Create cron for auto update
+  ansible.builtin.cron:
+    name: "Auto update/upgrade via apt"
+    minute: '30'
+    hour: '05'
+    month: '*'
+    day: '*'
+    weekday: '0'
+    job: "/bin/bash /home/{{ ansible_user }}/cronjobs/update.sh"

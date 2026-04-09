@@ -3,24 +3,28 @@
   ansible.builtin.apt:
     name: cron
     state: present
+  tags: cron
 
 - name: Create a directory if it does not exist
   ansible.builtin.file:
     path: /home/{{ ansible_user }}/cronjobs
     state: directory
     mode: '0755'
+  tags: cron
 
 - name: Create file for cron jobs auto update
   ansible.builtin.file:
     path: /home/{{ ansible_user }}/cronjobs/auto_update.sh
     state: touch
     mode: '0755'
+  tags: cron
 
 - name: write bash command for auto update
   ansible.builtin.shell: |
     echo "sudo apt update && sudo apt upgrade -y" > /home/{{ ansible_user }}/cronjobs/update.sh
   args:
     creates: /home/{{ ansible_user }}/cronjobs/update.sh
+  tags: cron
 
 - name: Create cron for auto update
   ansible.builtin.cron:
@@ -31,3 +35,4 @@
     day: '*'
     weekday: '0'
     job: "/bin/bash /home/{{ ansible_user }}/cronjobs/update.sh"
+  tags: cron

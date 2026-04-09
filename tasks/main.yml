@@ -20,8 +20,11 @@
   tags: cron
 
 - name: write bash command for auto update
+  become_user: "{{ ansible_user }}"
+  become: false
   ansible.builtin.shell: |
     echo "sudo apt update && sudo apt upgrade -y" > /home/{{ ansible_user }}/cronjobs/update.sh
+    chmod +x /home/{{ ansible_user }}/cronjobs/update.sh
   args:
     creates: /home/{{ ansible_user }}/cronjobs/update.sh
   tags: cron

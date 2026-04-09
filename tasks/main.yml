@@ -6,6 +6,8 @@
   tags: cron
 
 - name: Create a directory if it does not exist
+  become_user: "{{ ansible_user }}"
+  become: false
   ansible.builtin.file:
     path: /home/{{ ansible_user }}/cronjobs
     state: directory
@@ -13,6 +15,8 @@
   tags: cron
 
 - name: Create file for cron jobs auto update
+  become_user: "{{ ansible_user }}"
+  become: false
   ansible.builtin.file:
     path: /home/{{ ansible_user }}/cronjobs/auto_update.sh
     state: touch
@@ -30,6 +34,8 @@
   tags: cron
 
 - name: Create cron for auto update
+  become_user: "{{ ansible_user }}"
+  become: false
   ansible.builtin.cron:
     name: "Auto update/upgrade via apt"
     minute: '30'

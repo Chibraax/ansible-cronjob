@@ -1,4 +1,9 @@
 ---
+- name: Ensure crontab package is installed
+  ansible.builtin.apt:
+    name: cron
+    state: present
+
 - name: Create a directory if it does not exist
   ansible.builtin.file:
     path: /home/{{ ansible_user }}/cronjobs

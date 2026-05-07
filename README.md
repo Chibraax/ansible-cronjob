@@ -1,7 +1,8 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+Install all your crontabs, you can custom them on demand.
+By default add a crontab for auto update/upgrade
 
 Requirements
 ------------
@@ -26,6 +27,26 @@ Including an example of how to use your role (for instance, with variables passe
     - hosts: servers
       roles:
          - { role: username.rolename, x: 42 }
+
+    my_crons:
+      - name: "example job"
+        job: "/path/to/script.sh"
+        minute: "*"
+        hour: "*"
+        day: "*"
+        month: "*"
+        weekday: "*"
+        user: "{{ username }}"
+        state: present
+      - name: "example job2"
+        job: "/path/to/script.sh"
+        minute: "*"
+        hour: "*"
+        day: "*"
+        month: "*"
+        weekday: "*"
+        user: "squirrel"
+        state: present
 
 License
 -------

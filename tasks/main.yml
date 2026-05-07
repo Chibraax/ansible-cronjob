@@ -1,6 +1,6 @@
 ---
 - name: Ensure crontab package is installed
-  ansible.builtin.apt:
+  ansible.builtin.package:
     name: cron
     state: present
   tags: cron
@@ -25,8 +25,6 @@
   tags: cron
 
 - name: Create cron for auto update
-  become_user: "{{ ansible_user }}"
-  become: false
   ansible.builtin.cron:
     name: "Auto update/upgrade via apt"
     minute: '30'
@@ -35,4 +33,22 @@
     day: '*'
     weekday: '0'
     job: "/bin/bash /home/{{ ansible_user }}/cronjobs/update.sh"
+    user: "{{ ansible_user }}"
+  tags: cron
+
+- name: Add custom cronjobs
+  become: true
+  ansible.builtin.cron:
+    name: "{{ item.name }}"
+    minute: "{{ item.minute }}"
+    hour: "{{ item.hour }}"
+    month: "{{ item.month }}"
+    day: "{{ item.day }}"
+    weekday: "{{ item.weekday }}"
+    job: "{{ item.job }}"
+    user: "{{ item.user }}"
+  loop: "{{ my_crons }}"
+  when:
+    - my_crons is defined
+    - my_crons | length > 0
   tags: cron

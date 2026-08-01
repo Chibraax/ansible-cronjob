@@ -14,7 +14,7 @@
     mode: '0755'
   tags: cron
 
-- name: write bash command for auto update
+- name: Write bash command for auto update
   become_user: "{{ ansible_user }}"
   become: false
   ansible.builtin.shell: |
@@ -22,18 +22,6 @@
     chmod +x /home/{{ ansible_user }}/cronjobs/update.sh
   args:
     creates: /home/{{ ansible_user }}/cronjobs/update.sh
-  tags: cron
-
-- name: Create cron for auto update
-  ansible.builtin.cron:
-    name: "Auto update/upgrade via apt"
-    minute: '30'
-    hour: '05'
-    month: '*'
-    day: '*'
-    weekday: '0'
-    job: "/bin/bash /home/{{ ansible_user }}/cronjobs/update.sh"
-    user: "{{ ansible_user }}"
   tags: cron
 
 - name: Add custom cronjobs
